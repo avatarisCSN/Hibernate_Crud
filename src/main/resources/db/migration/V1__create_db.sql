@@ -1,5 +1,5 @@
 CREATE TABLE Client (
-                        id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                        id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
                         name VARCHAR(200) NOT NULL CHECK (LENGTH(name) >= 3)
 );
 
@@ -9,11 +9,11 @@ CREATE TABLE Planet (
 );
 
 CREATE TABLE ticket (
-                        id int AUTO_INCREMENT PRIMARY KEY,
+                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        client_id int NOT NULL,
-                        from_planet_id VARCHAR(50) NOT NULL,
-                        to_planet_id VARCHAR(50) NOT NULL,
+                        client_id BIGINT NOT NULL,
+                        from_planet_id VARCHAR(100) NOT NULL,
+                        to_planet_id VARCHAR(100) NOT NULL,
 
                         CONSTRAINT fk_ticket_client
                             FOREIGN KEY (client_id) REFERENCES client(id)

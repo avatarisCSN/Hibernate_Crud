@@ -1,45 +1,57 @@
 package example;
 
+import example.model.Client;
+import example.model.Planet;
+import example.service.ClientCrudService;
+import example.service.PlanetCrudService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.flywaydb.core.Flyway;
 
 public class Main {
-    public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPU");
-        EntityManager em = emf.createEntityManager();
 
-        ClientCrudService clientService = new ClientCrudService(em);
-        PlanetCrudService planetService = new PlanetCrudService(em);
+
+
+
+
+
+    public static void main(String[] args) {
+
+        // 1. Прогоняем миграции
+        Flyway flyway = Flyway.configure()
+                .dataSource("jdbc:mysql://localhost:3306/jdbc_hiber", "root", "asdfgh665599")
+                .load();
+        flyway.migrate();
+
+        ClientCrudService clientService = new ClientCrudService();
+        PlanetCrudService planetService = new PlanetCrudService();
 
         // --- Client ---
-        Client client = new Client();
-        client.setName("John Doe");
-        clientService.create(client);
-        System.out.println("All clients: " + clientService.readAll());
 
-        client.setName("John Updated");
-        clientService.update(client);
-        System.out.println("Updated client: " + clientService.read(client.getId()));
+        clientService.addClient("Jonni Cina");
 
-        clientService.delete(client.getId());
-        System.out.println("All clients after delete: " + clientService.readAll());
+        System.out.println("All clients: " + clientService.getAllClients().toString());
 
-        // --- Planet ---
-        Planet planet = new Planet();
-        planet.setId("mars");
-        planet.setName("Mars");
-        planetService.create(planet);
-        System.out.println("All planets: " + planetService.readAll());
 
-        planet.setName("Mars Updated");
-        planetService.update(planet);
-        System.out.println("Updated planet: " + planetService.read(planet.getId()));
+        clientService.updateClientById(6L, "Honney Silk");
+        System.out.println("Updated client: " + clientService.getClientById(6L));
 
-        planetService.delete(planet.getId());
-        System.out.println("All planets after delete: " + planetService.readAll());
+        clientService.deleteClientById(6L);
+        System.out.println("All clients: " + clientService.getAllClients().toString());
 
-        em.close();
-        emf.close();
+      // planet
+        planetService.addPlanet("MARS4", "Marsianka");
+
+        System.out.println("All planets: " + planetService.getAllPlanets().toString());
+
+
+        planetService.updatePlanetById("MARS4", "Marsey-happy");
+        System.out.println("Updated planet: " + planetService.getPlanetById("MARS4"));
+
+        planetService.deletePlanetById("MARS4");
+        System.out.println("All clients: " + planetService.getAllPlanets().toString());
+
+
     }
 }

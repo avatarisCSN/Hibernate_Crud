@@ -1,20 +1,26 @@
 package example;
 
+import example.model.Client;
+import example.service.ClientCrudService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.flywaydb.core.Flyway;
 
-@SpringBootApplication
+import java.util.Arrays;
+import java.util.List;
+
+
 
 
 public class Demo {
     public static void main(String[] args) {
-        Flyway flyway = Flyway.configure()
-                .dataSource("jdbc:mysql://localhost:3306/jdbc_hiber?useSSL=false&serverTimezone=UTC", "root", "asdfgh665599")
-                .load();
+        Client client =  new Client();
+        client.setId(12L);
+        client.setName("boroshka");
+        ClientCrudService clientService = new ClientCrudService();
 
-        flyway.migrate();
-
-        System.out.println("Миграции выполнены для MySQL!");
+        List<Client> clients = clientService.getAllClients();
+        System.out.println(clients);
+        System.out.println("Hellooooo " + clients.toString());
     }
 }
